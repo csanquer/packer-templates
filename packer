@@ -1,0 +1,198 @@
+#!/usr/bin/env python
+
+import argparse
+import errno
+import getpass
+import os
+import re
+import subprocess
+import sys
+import urllib
+import tarfile
+import json
+
+from pprint import pprint, pformat
+
+from yaml import dump, load
+
+try:
+    from yaml import CLoader as Loader, CDumper as Dumper
+except ImportError:
+    from yaml import Loader, Dumper
+
+colors = {
+    'black': 0,
+    'red': 1,
+    'green': 2,
+    'yellow': 3,
+    'blue': 4,
+    'magenta': 5,
+    'cyan': 6,
+    'white': 7,
+    'default': 9
+}
+
+styles = {'normal': 0, 'bold': 1, 'light': 2, 'inverse': 3, 'underline': 4}
+
+
+def main():
+    parser = argparse.ArgumentParser(description='packer builder wrapper')
+    parser.add_argument(
+        'template',
+        type=str,
+        metavar='packer template',
+        help='packer template to build')
+    # parser.add_argument(
+    #     'vault_files_groups',
+    #     type=str,
+    #     nargs='*',
+    #     default=['all'],
+    #     help='ansible vault files groups')
+    # parser.add_argument(
+    #     '-c',
+    #     '--config',
+    #     type=lambda x: is_valid_file(parser, x),
+    #     default='config.yml.dist',
+    #     help='Packer variables YAML config')
+    parser.add_argument(
+        '--verbose', '-v', action='count', help='set output verbosity')
+
+    args = parser.parse_args()
+
+    root_dir = os.path.dirname(os.path.abspath(__file__))
+
+    configfile = 'config.yml'
+    if not os.path.exists(configfile):
+        configfile = configfile + '.dist'
+
+    config = load(file(configfile))
+
+    templates_config = load(file(root_dir+'/templates.yml'))
+    templates = templates_config['templates']
+
+    pprint(config)
+
+    if args.template not in templates:
+        print colorize('{} is not in templates list', 'red').format(args.template)
+        sys.exit(1)
+
+    build_template(args.template, templates[args.template], config, root_dir)
+
+
+    # vault_password_dir = os.path.join(root_dir, config['password_dir']
+    #                                   if 'password_dir' in config and
+    #                                   len(config['password_dir']) else
+    #                                   'vault_passwords')
+    #
+    # if 'groups' not in config:
+    #     print colorize(
+    #         'There are no groups in ' + args.config + ' config file', 'red')
+    #     sys.exit(1)
+    #
+    # groups = get_vault_groups(args.vault_files_groups, config['groups'])
+    #
+    # res = True
+    # for group, files in groups.iteritems():
+    #     print "Vault Group: " + colorize(group, 'blue')
+    #     if not run_vault_command(args.command, group, files,
+    #                              vault_password_dir, args.verbose):
+    #         res = False
+    #
+    # sys.exit(0 if res else 1)
+
+#
+# def is_valid_file(parser, arg):
+#     arg = os.path.abspath(arg)
+#     if not os.path.exists(arg):
+#         parser.error("The file {} does not exist!".format(arg))
+#     else:
+#         return arg
+
+
+def build_template(template_name, template, config, root_dir):
+    pprint(template)
+    pprint(config)
+
+    template_dir = os.path.join(root_dir, template_name)
+    box_dir = os.path.join(template_dir, 'box')
+
+    # ovf = download_box(template['box']['url'], box_dir)
+    # pprint(ovf)
+
+    os.chdir(template_dir)
+
+    varsfile = template_dir+'/vars.json'
+    with open(varsfile, 'w') as f:
+        f.write(json.dumps(config, sort_keys=True, indent=2, separators=(',', ': ')))
+
+    cmd = ['packer', 'build', '--only=virtualbox-iso', '-var-file='+varsfile, 'packer.json']
+    shellpipe(cmd)
+
+    os.chdir(root_dir)
+
+def download_box(url, target_dir):
+    pprint(url)
+    pprint(target_dir)
+    box = target_dir+'/virtualbox.box'
+    ovf = target_dir+'/box.ovf'
+
+    if not os.path.exists(target_dir):
+        os.makedirs(target_dir)
+
+    if not os.path.exists(box):
+        shellpipe(['wget', '-O', box, url])
+
+    if not os.path.exists(ovf):
+        shellpipe(['tar', '-C', target_dir, '-xf', box])
+
+    return ovf
+
+
+def shell(cmd, cwd=None, verbose=0):
+    try:
+        if (verbose > 0):
+            print "running : " + ' '.join(cmd)
+
+        out = subprocess.check_output(
+            cmd, cwd=cwd, universal_newlines=True, stderr=subprocess.STDOUT)
+        return out, 0
+    except subprocess.CalledProcessError as e:
+        return e.output, e.returncode
+
+
+def shellpipe(cmd):
+    print 'running ' + colorize(' '.join(cmd), 'yellow')
+
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    while True:
+        output = process.stdout.readline()
+        if output == '' and process.poll() is not None:
+            break
+        if output:
+            print output.strip()
+    rc = process.poll()
+    return rc
+
+
+def colorize(text, color='default', style='normal', background='default'):
+    return '{}{}{}'.format(
+        get_color(color, style, background), text, get_color('reset'))
+
+
+def get_color(color='default', style='normal', background='default'):
+    if color == 'reset':
+        style = 'normal'
+
+    seq = [str(styles[style])]
+
+    if color in colors and color != 'reset':
+        seq.append('3' + str(colors[color]))
+
+    if background in colors and color != 'reset':
+        seq.append('4' + str(colors[background]))
+
+    return "\033[{}m".format(';'.join(seq))
+
+
+if __name__ == '__main__':
+    main()

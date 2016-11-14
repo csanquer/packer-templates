@@ -1,0 +1,7 @@
+---
+templates:
+  docker:
+    dir: ubuntu-docker
+    box:
+      # url: https://atlas.hashicorp.com/ubuntu/boxes/xenial64/versions/20161109.1.0/providers/virtualbox.box
+      url: https://atlas.hashicorp.com/v0rtex/boxes/xenial64/versions/20161111.0.0/providers/virtualbox.box
