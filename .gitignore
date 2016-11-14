@@ -1,0 +1,4 @@
+box/
+output-*/
+*.box
+packer_cache/
