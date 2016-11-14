@@ -3,3 +3,4 @@ box/
 output-*/
 *.box
 packer_cache/
+vars.json
