@@ -1,48 +1,9 @@
 {
-  "variables": {
-      "BOX_NAME": "ubuntu-docker",
-      "BOX_VERSION": "0.1.0",
-      "BOX_DESCRIPTION": "",
-
-      "atlas_username": "csanquer",
-      "atlas_name": "ubuntu-docker",
-      "atlas_token": "",
-
-      "OS_NAME": "ubuntu",
-      "OS_ENV": "server",
-      "OS_ARCH": "amd64",
-      "OS_VERSION": "16.04",
-      "OS_ISO_CHECKSUM": "b8b172cbdf04f5ff8adc8c2c1b4007ccf66f00fc6a324a6da6eba67de71746f6",
-
-      "install_preseed": "preseed.cfg",
-
-      "headless": "true",
-
-      "TZ_CONTINENT": "UTC",
-      "TZ_COUNTRY": "",
-      "DEFAULT_LOCALE": "en_US",
-      "DEFAULT_CHARSET": "UTF-8",
-
-      "UNIX_USER": "vagrant",
-      "UNIX_PASSWORD": "vagrant",
-      "data_dir": "/home/vagrant/install_data",
-
-      "hardware_disk": "40960",
-      "hardware_cpu": "2",
-      "hardware_memory": "1024",
-
-      "ssh_port": "22",
-      "network_hostname": "vagrant-docker",
-      "network_domain": "local"
-  },
   "builders": [
     {
       "type": "virtualbox-iso",
       "boot_command": [
-        "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "{{ user `boot_command_prefix` }}",
         "/install/vmlinuz<wait>",
         " auto<wait>",
         " console-setup/ask_detect=false<wait>",
@@ -52,7 +13,7 @@
         " debian-installer=en_US<wait>",
         " fb=false<wait>",
         " initrd=/install/initrd.gz<wait>",
-        " kbd-chooser/method=fr<wait>",
+        " kbd-chooser/method=en<wait>",
         " keyboard-configuration/layout=USA<wait>",
         " keyboard-configuration/variant=USA<wait>",
         " locale=en_US<wait>",
@@ -79,7 +40,7 @@
       "ssh_port": "{{ user `ssh_port` }}",
       "ssh_wait_timeout": "10000s",
       "type": "virtualbox-iso",
-      "vm_name": "{{ user `BOX_NAME` }}",
+      "vm_name": "{{ user `box_name` }}",
       "vboxmanage": [
         [ "modifyvm", "{{.Name}}", "--memory", "{{ user `hardware_memory` }}" ],
         [ "modifyvm", "{{.Name}}", "--cpus", "{{ user `hardware_cpu` }}" ]
@@ -119,8 +80,11 @@
     {
       "type": "ansible-local",
       "extra_arguments": [""],
-      "playbook_file": "local.yml",
+      "playbook_dir": "ansible",
+      "group_vars": "ansible/group_vars",
+      "playbook_file": "ansible/local.yml",
       "role_paths": [
+        "../roles/account",
         "../roles/lsb-release",
         "../roles/packages",
         "../roles/python",
@@ -132,7 +96,46 @@
     {
       "type": "vagrant",
       "compression_level": "9",
-      "keep_input_artifact": true
+      "keep_input_artifact": false,
+      "output": "{{ user `box_name` }}_{{ user `box_version` }}.box"
     }
-  ]
+  ],
+  "variables": {
+      "box_name": "ubuntu-docker",
+      "box_version": "0.0.1",
+      "box_description": "",
+
+      "atlas_username": "",
+      "atlas_name": "ubuntu-docker",
+      "atlas_token": "",
+
+      "OS_NAME": "ubuntu",
+      "OS_ENV": "server",
+      "OS_ARCH": "amd64",
+      "OS_VERSION": "16.04",
+      "OS_ISO_CHECKSUM": "b8b172cbdf04f5ff8adc8c2c1b4007ccf66f00fc6a324a6da6eba67de71746f6",
+
+      "install_preseed": "preseed.cfg",
+
+      "headless": "true",
+
+      "TZ_CONTINENT": "UTC",
+      "TZ_COUNTRY": "",
+      "DEFAULT_LOCALE": "en_US",
+      "DEFAULT_CHARSET": "UTF-8",
+
+      "UNIX_USER": "vagrant",
+      "UNIX_PASSWORD": "vagrant",
+      "data_dir": "/home/vagrant/install_data",
+
+      "hardware_disk": "40960",
+      "hardware_cpu": "2",
+      "hardware_memory": "1024",
+
+      "ssh_port": "22",
+      "network_hostname": "vagrant-docker",
+      "network_domain": "local",
+
+      "boot_command_prefix": "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>"
+  }
 }

@@ -1,0 +1,10 @@
+---
+- name: local install
+  hosts: all
+  connection: local
+  become: yes
+  become_method: sudo
+
+  roles:
+    - account
+    - docker

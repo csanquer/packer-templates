@@ -1,0 +1,85 @@
+---
+sudo_files:
+  - { sudogroup: 'vagrant', command_user: 'ALL', nopasswd_commands: ['ALL'] }
+
+account_groups:
+  vagrant:
+    gid: 1000
+    system: false
+  docker:
+    gid: 998
+    system: true
+
+account_users:
+  vagrant:
+    name: vagrant
+    comment: 'Vagrant default user'
+    group: vagrant
+    groups:
+      - adm
+      - cdrom
+      - sudo
+      - dip
+      - plugdev
+      - lxd
+      - lpadmin
+      - sambashare
+    uid: 1000
+    config_files:
+      -
+        src: home/{{ ansible_os_family|lower }}/.bashrc.j2
+        backup: yes
+        force: no
+      -
+        src: home/.bash_aliases.j2
+        backup: yes
+        force: no
+      -
+        src: home/.zshrc.j2
+        backup: yes
+        force: no
+    gitconfig: []
+      # - { name: 'user.name', option: 'Martin Dupond'}
+      # - { name: 'user.email', option: 'martin.dupond@example.com'}
+    bash_aliases: {}
+      # <alias>: <command>
+
+account_env_vars:
+  vagrant: {}
+  # <username>:
+  #     <key>: <value>
+
+account_user_passwords:
+    vagrant: vagrant
+
+docker_allowed_user:
+  - vagrant
+
+apt_update_boot: true
+apt_upgrade: true
+apt_upgrade_type: full
+apt_extra_packages:
+  - linux-generic
+  - linux-headers-generic
+  - "linux-headers-{{ ansible_kernel }}"
+  - "linux-image-extra-{{ ansible_kernel }}"
+  - dkms
+  - p7zip-rar
+  - lftp
+  - dos2unix
+  - openssh-blacklist
+  - openssh-blacklist-extra
+  - openssl-blacklist
+  - openssl-blacklist-extra
+  - clamav
+  - clamav-freshclam
+  - vim-doc
+  - trash-cli
+  - mc
+  - manpages-fr
+  - manpages-fr-dev
+  - manpages-fr-extra
+  - git-extras
+  - git-doc
+  - nfs-common
+  - portmap
