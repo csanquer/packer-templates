@@ -92,17 +92,24 @@ def build_template(template_name, template, config, root_dir):
 
         f.write(json.dumps(varsconfig, sort_keys=True, indent=2, separators=(',', ': ')))
 
+    packer_output_dir = os.path.join(template_dir, 'output-'+template_type)
+    if os.path.exists(packer_output_dir):
+        shutil.rmtree(packer_output_dir, True)
+
     cmd = ['packer', 'build', '--only=' + template_type, '-var-file=' + varsfile, 'packer.json']
 
     if shellpipe(cmd) == 0:
         box_path = os.path.join(template_dir, box_filename)
-        if os.path.exists(os.path.join(build_dir, box_filename)):
-            os.remove(box_path)
+        box_final_path = os.path.join(build_dir, box_filename)
+        if os.path.exists(box_final_path):
+            os.remove(box_final_path)
 
         if os.path.exists(box_path):
+            print "box saved to {}".format(box_final_path)
             shutil.move(box_path, build_dir)
 
-    shutil.rmtree(os.path.join(template_dir, 'output'), True)
+        if os.path.exists(packer_output_dir):
+            shutil.rmtree(packer_output_dir, True)
 
     os.chdir(root_dir)
 
@@ -126,7 +133,7 @@ def download_box(url, target_dir):
 def shell(cmd, cwd=None, verbose=0):
     try:
         if (verbose > 0):
-            print "running : " + ' '.join(cmd)
+            print 'running ' + colorize(' '.join(cmd), 'yellow')
 
         out = subprocess.check_output(
             cmd, cwd=cwd, universal_newlines=True, stderr=subprocess.STDOUT)
