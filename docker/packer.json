@@ -51,6 +51,7 @@
       "type": "virtualbox-ovf",
       "source_path": "box/box.ovf",
       "headless": "{{ user `headless` }}",
+      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
       "ssh_username": "{{ user `UNIX_USER` }}",
       "ssh_password": "{{ user `UNIX_PASSWORD` }}",
       "shutdown_command": "echo '{{ user `UNIX_PASSWORD` }}' | sudo -S shutdown -P now",
@@ -63,8 +64,6 @@
   "provisioners": [
     {
       "type": "shell",
-      "environment_vars": [
-      ],
       "execute_command": "echo '{{ user `UNIX_PASSWORD` }}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
       "scripts": [
           "../scripts/ansible.sh"
@@ -79,16 +78,33 @@
     },
     {
       "type": "ansible-local",
-      "extra_arguments": [""],
+      "extra_arguments": ["-vv"],
       "playbook_dir": "ansible",
       "group_vars": "ansible/group_vars",
       "playbook_file": "ansible/local.yml",
       "role_paths": [
         "../roles/account",
+        "../roles/locales",
+        "../roles/network",
         "../roles/lsb-release",
         "../roles/packages",
         "../roles/python",
-        "../roles/docker"
+        "../roles/sshd",
+        "../roles/samba",
+        "../roles/nfs",
+        "../roles/docker",
+        "../roles/vagrant-tools"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+          "ADMIN_USER={{ user `UNIX_USER` }}"
+      ],
+      "execute_command": "echo '{{ user `UNIX_PASSWORD` }}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+      "scripts": [
+          "../scripts/grub.sh",
+          "../scripts/debian_cleanup.sh"
       ]
     }
   ],
@@ -118,11 +134,6 @@
       "install_preseed": "preseed.cfg",
 
       "headless": "true",
-
-      "TZ_CONTINENT": "UTC",
-      "TZ_COUNTRY": "",
-      "DEFAULT_LOCALE": "en_US",
-      "DEFAULT_CHARSET": "UTF-8",
 
       "UNIX_USER": "vagrant",
       "UNIX_PASSWORD": "vagrant",

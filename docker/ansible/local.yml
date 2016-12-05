@@ -6,5 +6,11 @@
   become_method: sudo
 
   roles:
+    - packages
+    - network
+    - locales
+    - nfs
+    - samba
     - account
     - docker
+    - vagrant-tools

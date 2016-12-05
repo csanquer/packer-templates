@@ -5,8 +5,8 @@ templates:
     # type: virtualbox-iso
     type: virtualbox-ovf
     box:
-      # url: https://atlas.hashicorp.com/ubuntu/boxes/xenial64/versions/20161109.1.0/providers/virtualbox.box
-      url: https://atlas.hashicorp.com/boxcutter/boxes/ubuntu1604/versions/2.0.23/providers/virtualbox.box
+      # url: https://atlas.hashicorp.com/boxcutter/boxes/ubuntu1604/versions/2.0.25/providers/virtualbox.box
+      url: https://atlas.hashicorp.com/geerlingguy/boxes/ubuntu1604/versions/1.0.5/providers/virtualbox.box
     name: ubuntu-docker
     version: "0.1.0"
     description: "Docker ready VM based on ubuntu 16.04"
