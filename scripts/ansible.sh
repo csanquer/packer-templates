@@ -19,6 +19,6 @@ if [ "$distId" = 'Debian' -o "$distId" = 'Ubuntu' ]; then
     apt-get update
     apt-get install -y build-essential libffi-dev libssl-dev python python-dev python-setuptools git
     easy_install pip
-    # sudo pip install pycparser==2.13
+    pip install -U jinja2 pycparser
     pip install -U ansible
 fi

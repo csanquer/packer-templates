@@ -114,6 +114,18 @@
       "compression_level": "9",
       "keep_input_artifact": false,
       "output": "{{ user `box_name` }}_{{ user `box_version` }}.box"
+    },
+    {
+      "type": "atlas",
+      "only": ["virtualbox-iso", "virtualbox-ovf"],
+      "artifact": "{{user `atlas_username`}}/{{user `atlas_name`}}",
+      "artifact_type": "vagrant.box",
+      "token": "{{ user `atlas_token` }}",
+      "metadata": {
+        "provider": "virtualbox",
+        "version": "{{ user `box_version` }}",
+        "description" : "{{ user `box_description` }}"
+      }
     }
   ],
   "variables": {

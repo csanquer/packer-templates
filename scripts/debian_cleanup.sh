@@ -12,6 +12,9 @@ dpkg --list | awk '{ print $2 }' | grep linux-source | xargs apt-get -y purge
 # delete development packages
 dpkg --list | awk '{ print $2 }' | grep -- '-dev$' | xargs apt-get -y purge
 
+# reinstall only python-dev for ansible
+apt-get install -y libffi-dev libssl-dev python-dev
+
 # delete compilers and other development tools
 # apt-get -y purge cpp gcc g++
 
