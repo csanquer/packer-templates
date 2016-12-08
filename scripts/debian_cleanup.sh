@@ -12,12 +12,6 @@ dpkg --list | awk '{ print $2 }' | grep linux-source | xargs apt-get -y purge
 # delete development packages
 dpkg --list | awk '{ print $2 }' | grep -- '-dev$' | xargs apt-get -y purge
 
-# reinstall only python-dev for ansible
-apt-get install -y libffi-dev libssl-dev python-dev
-
-# delete compilers and other development tools
-# apt-get -y purge cpp gcc g++
-
 # delete X11 libraries
 apt-get -y purge libx11-data xauth libxmuu1 libxcb1 libx11-6 libxext6
 
@@ -29,6 +23,12 @@ apt-get -y purge popularity-contest
 
 apt autoremove
 apt update
+
+# reinstall ansible properly
+apt-get install -y build-essential libffi-dev libssl-dev python python-dev python-setuptools git
+easy_install pip
+pip install -U jinja2 pycparser
+pip install -U ansible
 
 # Cleanup Virtualbox
 rm -rf VBoxGuestAdditions_*.iso VBoxGuestAdditions_*.iso.?

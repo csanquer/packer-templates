@@ -8,7 +8,7 @@ templates:
       # url: https://atlas.hashicorp.com/boxcutter/boxes/ubuntu1604/versions/2.0.25/providers/virtualbox.box
       url: https://atlas.hashicorp.com/geerlingguy/boxes/ubuntu1604/versions/1.0.5/providers/virtualbox.box
     name: ubuntu-docker
-    version: "0.1.0"
+    version: "0.1.1"
     description: |
       Ubuntu 16.04.1 LTS xenial 64bits Docker Virtual Machine
 
@@ -19,6 +19,7 @@ templates:
       * Docker-machine 0.8.2
       * Samba (CIFS network shared folder)
       * NFS
+      * ansible 2.2.0
       * git 2.7.4
 
     vars:
