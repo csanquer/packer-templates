@@ -12,5 +12,6 @@
     - nfs
     - samba
     - account
+    - oh-my-zsh
     - docker
     - vagrant-tools

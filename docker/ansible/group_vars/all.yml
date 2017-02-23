@@ -107,6 +107,24 @@ account_url_authorized_keys:
     urls:
       - 'https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pub'
 
+zsh_users:
+  -
+    user: "vagrant"
+    group: "vagrant"
+    zshrc_template: .zshrc.j2
+    env_vars:
+      PATH: '$HOME/bin:/usr/local/bin:$PATH'
+    backup: yes
+    force: yes
+    zsh_default_shell: true
+    theme: robbyrussell
+    # custom theme files to copy to ~/.oh-my-zsh/themes
+    custom_themes: []
+    plugins:
+      - git
+
+# zsh_zshrc_default_template: .zshrc.j2
+
 samba_users:
   vagrant: vagrant
 
@@ -141,6 +159,14 @@ samba_users:
 #           - 'anonuid=1000'
 #           - 'anongid=1000'
 #           - no_subtree_c‌​heck
+
+docker_state: latest
+# pip install
+docker_compose_by_pip: true
+docker_compose_state: latest
+# binary install
+docker_compose_version: latest
+docker_machine_version: latest
 
 docker_allowed_user:
   - vagrant
