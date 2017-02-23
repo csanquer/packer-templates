@@ -5,6 +5,8 @@ ENV = /usr/bin/env
 # default shell options
 .SHELLFLAGS = -c
 
+box := docker
+
 .SILENT: ;               # no need for @
 .ONESHELL: ;             # recipes execute in same shell
 .NOTPARALLEL: ;          # wait for this target to finish
@@ -19,4 +21,4 @@ config:
 	cp -n -v config.yml.dist config.yml
 
 build: config
-	$(ENV) python packer docker
+	$(ENV) python packer $(box)

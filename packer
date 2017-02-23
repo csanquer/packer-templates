@@ -68,7 +68,7 @@ def main():
 
 def build_template(template_name, template, config, root_dir):
     template_dir = os.path.join(root_dir, template_name)
-    box_dir = os.path.join(template_dir, 'box')
+    box_dir = os.path.join(root_dir, 'box')
     build_dir = os.path.join(root_dir, 'build', template_name)
     if not os.path.exists(build_dir):
         os.makedirs(build_dir)
@@ -79,7 +79,7 @@ def build_template(template_name, template, config, root_dir):
     box_filename = "{}_{}.box".format(box_name, box_version)
 
     if template_type == 'virtualbox-ovf':
-        ovf = download_box(template['box']['url'], box_dir)
+        ovf = download_box(template['box'], box_dir)
 
     os.chdir(template_dir)
 
@@ -89,6 +89,9 @@ def build_template(template_name, template, config, root_dir):
         varsconfig['box_name'] = box_name
         varsconfig['box_version'] = box_version
         varsconfig['box_description'] = template.get('description', '')
+
+        if ovf :
+            varsconfig['box_source_path'] = ovf
 
         f.write(json.dumps(varsconfig, sort_keys=True, indent=2, separators=(',', ': ')))
 
@@ -114,7 +117,9 @@ def build_template(template_name, template, config, root_dir):
     os.chdir(root_dir)
 
 
-def download_box(url, target_dir):
+def download_box(box_infos, box_dir):
+    target_dir = os.path.join(box_dir, box_infos.get('name', 'box'), box_infos.get('version', ''))
+
     box = target_dir+'/virtualbox.box'
     ovf = target_dir+'/box.ovf'
 
@@ -122,7 +127,7 @@ def download_box(url, target_dir):
         os.makedirs(target_dir)
 
     if not os.path.exists(box):
-        shellpipe(['wget', '-O', box, url])
+        shellpipe(['wget', '-O', box, box_infos['url']])
 
     if not os.path.exists(ovf):
         shellpipe(['tar', '-C', target_dir, '-xf', box])
