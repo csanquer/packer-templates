@@ -14,12 +14,12 @@ templates:
 
       see https://github.com/csanquer/packer-templates
 
-      * Docker 1.12.3
-      * Docker-compose 1.9.0
-      * Docker-machine 0.8.2
+      * Docker 1.13.1
+      * Docker-compose 1.11.2
+      * Docker-machine 0.9.0
       * Samba (CIFS network shared folder)
       * NFS
-      * ansible 2.2.0
+      * ansible 2.2.1.0
       * git 2.7.4
 
     vars:

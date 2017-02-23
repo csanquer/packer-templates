@@ -15,11 +15,14 @@ network_hosts:
     ip: '127.0.0.1'
     names: ['vagrant', 'vagrant.localhost', 'vagrant.local', 'vagrant.localhost.com', 'vagrant.local.com']
 
-network_dns_resolv_reconfigure: true
+network_dns_resolv_reconfigure: false
 network_resolv_nameservers:
+    # google
     - '8.8.8.8'
     - '8.8.4.4'
-
+    # opendns
+    # - '208.67.222.222'
+    # - '208.67.220.220'
 network_interfaces_reconfigure: true
 network_interfaces_restart: false
 network_interfaces:
@@ -56,6 +59,7 @@ account_users:
       - lpadmin
       - sambashare
     uid: 900
+    shell: /bin/bash
     config_files:
       -
         src: home/{{ ansible_os_family|lower }}/.bashrc.j2
@@ -116,7 +120,7 @@ zsh_users:
       PATH: '$HOME/bin:/usr/local/bin:$PATH'
     backup: yes
     force: yes
-    zsh_default_shell: true
+    zsh_default_shell: false
     theme: robbyrussell
     # custom theme files to copy to ~/.oh-my-zsh/themes
     custom_themes: []
@@ -174,6 +178,48 @@ docker_allowed_user:
 apt_update_boot: true
 apt_upgrade: true
 apt_upgrade_type: full
+apt_sources_lists_default:
+    -
+        comment: Official repositories
+        file: /etc/apt/sources.list
+        distrib: Ubuntu
+        repositories:
+            -
+                comment: 'Main repositories'
+                enabled: true
+                src_enabled: true
+                url: 'http://us.archive.ubuntu.com/ubuntu/'
+                packages: ['main', 'restricted', 'universe', 'multiverse']
+                section:  "{{ ansible_distribution_release }}"
+            -
+                comment: 'Update repositories'
+                enabled: true
+                src_enabled: true
+                url: 'http://us.archive.ubuntu.com/ubuntu/'
+                packages: ['main', 'restricted', 'universe', 'multiverse']
+                section:  "{{ ansible_distribution_release }}-updates"
+            -
+                comment: 'Security Update repositories'
+                enabled: true
+                src_enabled: true
+                url: 'http://security.ubuntu.com/ubuntu'
+                packages: ['main', 'restricted', 'universe', 'multiverse']
+                section:  "{{ ansible_distribution_release }}-security"
+            -
+                comment: 'Partner repositories'
+                enabled: true
+                src_enabled: true
+                url: 'http://archive.canonical.com/ubuntu'
+                packages: ['partner']
+                section:  "{{ ansible_distribution_release }}"
+            -
+                comment: 'Backports repositories'
+                enabled: true
+                src_enabled: true
+                url: 'http://us.archive.ubuntu.com/ubuntu'
+                packages: ['main', 'restricted', 'universe', 'multiverse']
+                section:  "{{ ansible_distribution_release }}-backports"
+
 apt_extra_packages:
   - linux-generic
   - linux-headers-generic
