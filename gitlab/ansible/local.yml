@@ -1,0 +1,16 @@
+---
+- name: local install
+  hosts: all
+  connection: local
+  become: yes
+  become_method: sudo
+
+  roles:
+    - packages
+    - network
+    - locales
+    - nfs
+    - account
+    - docker
+    - gitlab
+    - vagrant-tools

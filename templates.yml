@@ -27,3 +27,31 @@ templates:
     vars:
       atlas_username: csanquer
       atlas_name: ubuntu-docker
+
+  gitlab:
+    dir: gitlab
+    # type: virtualbox-iso
+    type: virtualbox-ovf
+    box:
+      name: geerlingguy/ubuntu1604
+      version: 1.0.9
+      url: https://atlas.hashicorp.com/geerlingguy/boxes/ubuntu1604/versions/1.0.9/providers/virtualbox.box
+    name: gitlab
+    version: "0.0.1"
+    description: ""
+
+    vars: {}
+
+  gitlab-runner:
+    dir: gitlab-runner
+    # type: virtualbox-iso
+    type: virtualbox-ovf
+    box:
+      name: geerlingguy/ubuntu1604
+      version: 1.0.9
+      url: https://atlas.hashicorp.com/geerlingguy/boxes/ubuntu1604/versions/1.0.9/providers/virtualbox.box
+    name: gitlab-runner
+    version: "0.0.1"
+    description: ""
+
+    vars: {}

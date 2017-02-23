@@ -37,3 +37,9 @@
 [submodule "roles/vagrant-tools"]
 	path = roles/vagrant-tools
 	url = https://github.com/csanquer/ansible-role-vagrant-tools.git
+[submodule "roles/gitlab"]
+	path = roles/gitlab
+	url = https://github.com/csanquer/ansible-role-gitlab.git
+[submodule "roles/postfix"]
+	path = roles/postfix
+	url = https://github.com/csanquer/ansible-role-postfix.git
