@@ -51,13 +51,10 @@ account_users:
     comment: 'Vagrant default user'
     group: vagrant
     groups:
-      - adm
-      - cdrom
       - sudo
       - dip
       - plugdev
       - lpadmin
-      - sambashare
     uid: 900
     shell: /bin/bash
     config_files:
@@ -148,9 +145,6 @@ docker_machine_version: latest
 docker_allowed_user:
   - vagrant
 
-gitlab_external_url:
-# gitlab_email_from:
-
 apt_update_boot: true
 apt_upgrade: true
 apt_upgrade_type: full
@@ -202,6 +196,8 @@ apt_extra_packages:
   - "linux-headers-{{ ansible_kernel }}"
   - "linux-image-extra-{{ ansible_kernel }}"
   - dkms
+  - p7zip-rar
+  - lftp
   - openssh-blacklist
   - openssh-blacklist-extra
   - openssl-blacklist

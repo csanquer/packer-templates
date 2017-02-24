@@ -43,3 +43,6 @@
 [submodule "roles/postfix"]
 	path = roles/postfix
 	url = https://github.com/csanquer/ansible-role-postfix.git
+[submodule "roles/gitlab-runner"]
+	path = roles/gitlab-runner
+	url = https://github.com/csanquer/ansible-role-gitlab-runner.git

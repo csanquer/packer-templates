@@ -89,10 +89,10 @@
         "../roles/packages",
         "../roles/python",
         "../roles/sshd",
-        "../roles/postfix",
-        "../roles/gitlab",
         "../roles/nfs",
+        "../roles/postfix",
         "../roles/docker",
+        "../roles/gitlab-runner",
         "../roles/vagrant-tools"
       ]
     },
@@ -120,12 +120,12 @@
   ],
   "variables": {
       "box_source_path": "../box/box.ovf",
-      "box_name": "gitlab",
+      "box_name": "gitlab-runner",
       "box_version": "0.0.1",
       "box_description": "",
 
       "atlas_username": "",
-      "atlas_name": "gitlab",
+      "atlas_name": "gitlab-runner",
       "atlas_token": "",
 
       "OS_NAME": "ubuntu",

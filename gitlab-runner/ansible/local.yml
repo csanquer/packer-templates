@@ -11,7 +11,7 @@
     - locales
     - nfs
     - account
-    # - docker
+    - docker
     - postfix
-    - gitlab
+    - gitlab-runner
     - vagrant-tools
